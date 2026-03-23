@@ -1,0 +1,183 @@
+/* 🔥 GLOBAL FIX (IMPORTANT) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌈 Background */
+body {
+  background: linear-gradient(135deg, #0f4c81, #1e6fd9);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* 📦 App Centering */
+.app-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Wrapper */
+.auth-wrapper {
+  text-align: center;
+}
+
+/* 💎 Glass Container */
+.container {
+  width: 360px;
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  color: white;
+}
+
+/* Title */
+.container h2 {
+  margin-bottom: 20px;
+}
+
+/* ✨ Inputs */
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  outline: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  transition: 0.3s;
+}
+
+input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+/* Focus effect */
+input:focus {
+  border: 1px solid #00c6ff;
+  box-shadow: 0 0 10px #00c6ff;
+}
+
+/* ❌ Error */
+.error {
+  border: 2px solid #ff4d4d !important;
+  box-shadow: 0 0 8px #ff4d4d;
+}
+
+/* ❗ Error Text */
+.error-text {
+  color: #ff4d4d;
+  font-size: 12px;
+  text-align: left;
+  margin-top: -5px;
+}
+
+/* 🔄 Shake */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+/* 🔐 Password Box */
+.password-box {
+  width: 100%;
+}
+
+/* 📊 Strength Bar */
+.strength-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  transition: 0.4s ease;
+}
+
+/* Strength Colors */
+.strength-1 { width: 20%; background: #ff4d4d; }
+.strength-2 { width: 40%; background: orange; }
+.strength-3 { width: 60%; background: yellow; }
+.strength-4 { width: 80%; background: #00ffae; }
+.strength-5 { width: 100%; background: #00ffae; }
+
+/* Strength Text */
+.strength-text {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Rules Box */
+.rules {
+  text-align: left;
+  font-size: 13px;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Rules Default */
+.rules p {
+  opacity: 0.5;
+  transition: 0.3s;
+}
+
+/* Rules Valid */
+.rules p.valid {
+  color: #00ffae;
+  opacity: 1;
+}
+
+/* 🔘 Button */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover */
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* 🔗 Switch text */
+.switch-text {
+  margin-top: 15px;
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+}
+
+.switch-text span {
+  color: #00c6ff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.switch-text span:hover {
+  text-decoration: underline;
+}
