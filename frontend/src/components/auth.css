@@ -1,0 +1,214 @@
+/* 🔥 GLOBAL RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌐 BODY */
+body {
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ✅ CENTER ONLY AUTH PAGES */
+.auth-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 💎 AUTH CARD */
+.container {
+  width: 360px;
+  padding: 30px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+  text-align: center;
+}
+
+/* TITLE */
+.container h2 {
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+/* ✅ INPUT (SCOPED) */
+.container input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+
+  border: 1px solid #cbd5f5;
+  background: rgba(255, 255, 255, 0.6);
+
+  color: #1e293b;
+  outline: none;
+  transition: 0.25s;
+}
+
+.container input::placeholder {
+  color: #94a3b8;
+}
+
+/* INPUT FOCUS */
+.container input:focus {
+  border: 1px solid #2563eb;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+/* ERROR */
+.container input.error {
+  border: 1px solid #ef4444 !important;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 12px;
+  text-align: left;
+}
+
+/* SHAKE */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.3s;
+}
+
+/* PASSWORD BOX */
+.password-box {
+  width: 100%;
+  position: relative;
+}
+
+/* STRENGTH BAR */
+.strength-bar {
+  height: 5px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: 0.3s;
+}
+
+.strength-1 { width: 20%; background: #ef4444; }
+.strength-2 { width: 40%; background: #f97316; }
+.strength-3 { width: 60%; background: #eab308; }
+.strength-4 { width: 80%; background: #22c55e; }
+.strength-5 { width: 100%; background: #16a34a; }
+
+.strength-text {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #64748b;
+}
+
+/* RULES */
+.rules {
+  text-align: left;
+  font-size: 13px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.rules p {
+  color: #94a3b8;
+}
+
+.rules p.valid {
+  color: #16a34a;
+}
+
+/* ✅ BUTTON (SCOPED FIXED) */
+.container button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 10px;
+  border: none;
+
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  font-size: 15px;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+/* SWITCH TEXT */
+.switch-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.switch-text span {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.switch-text span:hover {
+  text-decoration: underline;
+}
+
+/* EYE ICON */
+.eye-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eye-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #64748b;
+}
+
+.eye-icon:hover svg {
+  stroke: #2563eb;
+  transform: scale(1.1);
+}
+
+/* ✅ FIX ALIGNMENT WRAPPER */
+.auth-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* SWITCH TEXT CENTER */
+.switch-text {
+  text-align: center;
+  margin-top: 15px;
+}

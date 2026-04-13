@@ -1,0 +1,200 @@
+/* 🔤 CUSTOM FONTS */
+@font-face {
+  font-family: 'PoppinsCustom';
+  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'EpicPro';
+  src: url('/fonts/EpicPro.ttf') format('truetype');
+  font-weight: normal;
+}
+
+/* 🌐 GLOBAL */
+body {
+  margin: 0;
+  font-family: 'PoppinsCustom', sans-serif;
+  color: #1e293b;
+  background: #f8fafc;
+}
+
+.landing-container {
+  width: 100%;
+}
+
+/* 🔥 HERO SECTION */
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.hero h1 {
+  font-family: 'EpicPro', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 16px;
+  max-width: 500px;
+  opacity: 0.9;
+  margin-bottom: 25px;
+}
+
+.hero-buttons button {
+  margin: 10px;
+  padding: 12px 26px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'PoppinsCustom', sans-serif;
+  font-weight: 600;
+
+  background: white;
+  color: #1e40af;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.hero-buttons .secondary {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.hero-buttons button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* 🚀 FEATURES */
+.features {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.features h2 {
+  font-family: 'EpicPro', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+.feature-cards {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 260px;
+  padding: 25px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.card h3 {
+  font-family: 'PoppinsCustom', sans-serif;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* ⚙️ HOW IT WORKS */
+.steps {
+  padding: 70px 20px;
+  text-align: center;
+  background: #eef2ff;
+}
+
+.steps h2 {
+  font-family: 'EpicPro', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.step {
+  max-width: 150px;
+}
+
+.step span {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  line-height: 45px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 14px;
+}
+
+/* 🔥 CTA SECTION */
+.cta {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.cta h2 {
+  font-family: 'EpicPro', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
+
+.cta button {
+  margin-top: 20px;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-family: 'PoppinsCustom', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cta button:hover {
+  transform: scale(1.05);
+  background: #1e40af;
+}
+
+/* 📌 FOOTER */
+.footer {
+  background: #1e293b;
+  color: white;
+  text-align: center;
+  padding: 25px;
+  font-size: 14px;
+}
