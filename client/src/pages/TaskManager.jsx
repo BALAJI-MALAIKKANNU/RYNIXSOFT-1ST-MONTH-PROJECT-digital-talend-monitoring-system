@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { auth } from '../lib/firebase';
@@ -8,6 +9,7 @@ import Button from '../components/ui/Button';
 const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Form states
@@ -21,12 +23,14 @@ const TaskManager = () => {
   const fetchTasksAndUsers = async () => {
     try {
       const token = await auth.currentUser.getIdToken();
-      const [tasksRes, usersRes] = await Promise.all([
+      const [tasksRes, usersRes, teamsRes] = await Promise.all([
         axios.get(`${import.meta.env.VITE_API_URL}/tasks`, { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get(`${import.meta.env.VITE_API_URL}/users`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(`${import.meta.env.VITE_API_URL}/users`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${import.meta.env.VITE_API_URL}/teams`, { headers: { Authorization: `Bearer ${token}` } })
       ]);
       setTasks(tasksRes.data);
       setUsers(usersRes.data);
+      setTeams(teamsRes.data);
     } catch (err) {
       toast.error('Failed to load data');
     } finally {
@@ -42,9 +46,14 @@ const TaskManager = () => {
     e.preventDefault();
     try {
       const token = await auth.currentUser.getIdToken();
-      await axios.post(`${import.meta.env.VITE_API_URL}/tasks`, {
-        title, description, assignedTo, dueDate
-      }, {
+      const payload = { title, description, dueDate };
+      if (assignedTo.startsWith('team_')) {
+        payload.assignedTeam = assignedTo.replace('team_', '');
+      } else {
+        payload.assignedTo = assignedTo;
+      }
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/tasks`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Task created successfully');
@@ -150,11 +159,18 @@ const TaskManager = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1 px-1">Assign To</label>
             <select required value={assignedTo} onChange={e => setAssignedTo(e.target.value)}
               className="w-full h-11 px-4 rounded-xl border border-gray-200 outline-none focus:border-accent bg-white">
-              <option value="" disabled>Select User</option>
+              <option value="" disabled>Select User or Team</option>
               <option value="all" className="font-bold text-brand bg-gray-50">👥 Assign to All Regular Users</option>
-              {users
-                .filter(u => u.email !== auth.currentUser?.email)
-                .map(u => <option key={u._id} value={u._id}>{u.fullName} ({u.email})</option>)}
+              
+              <optgroup label="Teams">
+                {teams.map(t => <option key={`team_${t._id}`} value={`team_${t._id}`}>🛡️ Team: {t.name} ({t.members.length} members)</option>)}
+              </optgroup>
+
+              <optgroup label="Individual Users">
+                {users
+                  .filter(u => u.email !== auth.currentUser?.email)
+                  .map(u => <option key={u._id} value={u._id}>👤 {u.fullName} ({u.email})</option>)}
+              </optgroup>
             </select>
           </div>
           <div>
@@ -217,7 +233,7 @@ const TaskManager = () => {
       </div>
 
       <AnimatePresence>
-        {reviewModal.isOpen && reviewModal.task && (
+        {reviewModal.isOpen && reviewModal.task && createPortal(
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }} 
@@ -272,8 +288,8 @@ const TaskManager = () => {
                        {reviewModal.task.submissionFiles?.map((file, i) => (
                          <div key={i} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
                            <span className="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded">FILE</span>
-                           <a href={`${import.meta.env.VITE_API_URL.replace('/api', '')}${file}`} target="_blank" rel="noreferrer" className="text-sm text-indigo-600 hover:underline flex-1 truncate">
-                             {file.split('-').pop()}
+                           <a href={file.startsWith('http') ? file : `${import.meta.env.VITE_API_URL.replace('/api', '')}${file}`} target="_blank" rel="noreferrer" className="text-sm text-indigo-600 hover:underline flex-1 truncate">
+                             {file.includes('firebasestorage') ? file.split('?alt=')[0].split('%2F').pop().split('_').slice(1).join('_') : file.split('-').pop()}
                            </a>
                          </div>
                        ))}
@@ -305,7 +321,7 @@ const TaskManager = () => {
               </div>
             </motion.div>
           </div>
-        )}
+        , document.body)}
       </AnimatePresence>
     </motion.div>
   );

@@ -25,6 +25,24 @@ exports.createTask = async (req, res) => {
       return res.status(201).json(newTasks[0] || {}); // UI expects an object or array to trigger fetch
     }
 
+    if (req.body.assignedTeam) {
+      const Team = require('../models/Team');
+      const team = await Team.findById(req.body.assignedTeam).populate('members');
+      if (!team) return res.status(404).json({ error: 'Team not found' });
+      
+      const bulkTasks = team.members.map(member => ({
+        title,
+        description,
+        assignedTo: member._id,
+        assignedBy: adminUser._id,
+        dueDate
+      }));
+      const newTasks = await Task.insertMany(bulkTasks);
+      const io = req.app.get('io');
+      if (io) io.emit('new_task', { title, message: `Task assigned to Team: ${team.name}` });
+      return res.status(201).json(newTasks[0] || {});
+    }
+
     const newTask = new Task({
       title,
       description,
@@ -96,13 +114,16 @@ exports.deleteTask = async (req, res) => {
 exports.submitTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { submissionText, submissionNote } = req.body;
-    const submissionFiles = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
+    const { submissionText, submissionNote, fileUrl } = req.body;
     
     const currentUser = await User.findOne({ firebaseUid: req.user.uid });
     
     const task = await Task.findById(id);
     if (!task) return res.status(404).json({ error: 'Task not found' });
+    
+    if (new Date(task.dueDate) < new Date()) {
+      return res.status(400).json({ error: 'Task is past its due date and cannot be submitted.' });
+    }
     
     if (task.assignedTo.toString() !== currentUser._id.toString()) {
       return res.status(403).json({ error: 'Not authorized to submit this task' });
@@ -110,7 +131,7 @@ exports.submitTask = async (req, res) => {
 
     if (submissionText) task.submissionText = submissionText;
     if (submissionNote) task.submissionNote = submissionNote;
-    if (submissionFiles.length > 0) task.submissionFiles = submissionFiles;
+    if (fileUrl) task.submissionFiles = [fileUrl];
     task.submittedAt = new Date();
     task.status = 'needs_review';
     await task.save();

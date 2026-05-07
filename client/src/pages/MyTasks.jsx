@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { auth } from '../lib/firebase';
+import { auth, storage } from '../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { toast } from 'react-hot-toast';
 import Button from '../components/ui/Button';
 
@@ -41,24 +43,35 @@ const MyTasks = () => {
     if (!task) return;
     
     try {
+      setLoading(true);
       const token = await auth.currentUser.getIdToken();
       
-      const formData = new FormData();
-      if (link) formData.append('submissionText', link);
-      if (note) formData.append('submissionNote', note);
-      if (file) formData.append('files', file);
-      if (!link && !file && !note) formData.append('submissionText', 'No files or links provided.');
+      let fileUrl = null;
+      if (file) {
+        toast.loading('Uploading file...', { id: 'upload' });
+        const fileRef = ref(storage, `tasks/${task._id}/${Date.now()}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        fileUrl = await getDownloadURL(fileRef);
+        toast.dismiss('upload');
+      }
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/tasks/${task._id}/submit`, formData, {
+      const payload = {
+        submissionText: link || (fileUrl ? '' : 'No files or links provided.'),
+        submissionNote: note || '',
+        fileUrl: fileUrl
+      };
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/tasks/${task._id}/submit`, payload, {
         headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+          Authorization: `Bearer ${token}`
         }
       });
       toast.success('Task submitted successfully!');
       closeModal();
       fetchTasks();
     } catch (err) {
+      toast.dismiss('upload');
+      setLoading(false);
       toast.error(err.response?.data?.error || 'Failed to submit task');
     }
   };
@@ -85,7 +98,9 @@ const MyTasks = () => {
             {tasks.length === 0 && (
               <tr><td colSpan="6" className="p-8 text-center text-muted">No tasks available.</td></tr>
             )}
-            {tasks.map(task => (
+            {tasks.map(task => {
+              const isPastDue = new Date(task.dueDate) < new Date() && task.status !== 'completed';
+              return (
               <tr key={task._id} className="hover:bg-gray-50/50 transition-colors">
                 <td className="p-4">
                   <p className="font-semibold text-brand text-sm">{task.title}</p>
@@ -103,19 +118,23 @@ const MyTasks = () => {
                 </td>
                 <td className="p-4 flex justify-end">
                   {task.status !== 'completed' && task.status !== 'needs_review' ? (
-                    <Button size="sm" onClick={() => openModal(task)}>Submit Task</Button>
+                    isPastDue ? (
+                      <span className="text-xs font-bold text-danger bg-danger/10 px-3 py-1.5 rounded uppercase">Past Due</span>
+                    ) : (
+                      <Button size="sm" onClick={() => openModal(task)}>Submit Task</Button>
+                    )
                   ) : (
                     <span className="text-xs text-muted font-medium">Locked</span>
                   )}
                 </td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>
 
       <AnimatePresence>
-        {submissionModal.isOpen && submissionModal.task && (
+        {submissionModal.isOpen && submissionModal.task && createPortal(
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }} 
@@ -191,7 +210,7 @@ const MyTasks = () => {
               </div>
             </motion.div>
           </div>
-        )}
+        , document.body)}
       </AnimatePresence>
     </motion.div>
   );

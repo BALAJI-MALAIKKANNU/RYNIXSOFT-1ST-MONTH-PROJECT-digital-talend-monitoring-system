@@ -7,6 +7,8 @@ const authRoutes = require('./routes/auth.routes');
 const taskRoutes = require('./routes/task.routes');
 const userRoutes = require('./routes/user.routes');
 const aiRoutes = require('./routes/ai.routes');
+const teamRoutes = require('./routes/team.routes');
+const messageRoutes = require('./routes/message.routes');
 
 const app = express();
 
@@ -28,6 +30,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/teams', teamRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.get('/health', (req, res) => {
   res.send('DTMS API is running');

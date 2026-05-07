@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Users, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Users, Settings, LogOut, MessageCircle } from 'lucide-react';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
 import Logo from '../ui/Logo';
@@ -9,12 +9,14 @@ const Sidebar = ({ role }) => {
   const adminLinks = [
     { name: 'Dashboard', path: '/admin-dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'Task Manager', path: '/tasks', icon: <CheckSquare size={20} /> },
+    { name: 'Team Control', path: '/teams', icon: <Users size={20} /> },
     { name: 'Role Control', path: '/roles', icon: <Users size={20} /> },
+    { name: 'Messages', path: '/messages', icon: <MessageCircle size={20} /> },
   ];
-
   const userLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'My Tasks', path: '/my-tasks', icon: <CheckSquare size={20} /> },
+    { name: 'Messages', path: '/messages', icon: <MessageCircle size={20} /> },
   ];
 
   const links = role === 'admin' ? adminLinks : userLinks;

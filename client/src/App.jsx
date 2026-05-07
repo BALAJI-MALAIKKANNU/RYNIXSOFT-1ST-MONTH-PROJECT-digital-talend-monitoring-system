@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { socket } from './lib/socket';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './lib/firebase';
 import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -15,6 +17,8 @@ import MyTasks from './pages/MyTasks';
 import TaskManager from './pages/TaskManager';
 import Profile from './pages/Profile';
 import RoleControl from './pages/RoleControl';
+import TeamManagement from './pages/TeamManagement';
+import Messages from './pages/Messages';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 const AnimatedRoutes = () => {
@@ -32,6 +36,8 @@ const AnimatedRoutes = () => {
         <Route path="/my-tasks" element={<ProtectedRoute requiredRole="user"><PageWrapper><MyTasks /></PageWrapper></ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute requiredRole="admin"><PageWrapper><TaskManager /></PageWrapper></ProtectedRoute>} />
         <Route path="/roles" element={<ProtectedRoute requiredRole="admin"><PageWrapper><RoleControl /></PageWrapper></ProtectedRoute>} />
+        <Route path="/teams" element={<ProtectedRoute requiredRole="admin"><PageWrapper><TeamManagement /></PageWrapper></ProtectedRoute>} />
+        <Route path="/messages" element={<ProtectedRoute><PageWrapper><Messages /></PageWrapper></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><PageWrapper><Profile /></PageWrapper></ProtectedRoute>} />
       </Routes>
     </AnimatePresence>
@@ -46,12 +52,28 @@ const PageWrapper = ({ children }) => (
 
 const App = () => {
   useEffect(() => {
-    const socketUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
-    const socket = io(socketUrl);
     socket.on('new_task', (data) => {
       toast.success(data.message || 'New activity detected!', { icon: '🔔', duration: 5000 });
     });
-    return () => socket.disconnect();
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Fetch MongoDB _id to join chat room
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+          headers: { Authorization: `Bearer ${await user.getIdToken()}` }
+        });
+        const users = await res.json();
+        const mongoUser = users.find(u => u.firebaseUid === user.uid);
+        if (mongoUser) {
+          socket.emit('join_chat', mongoUser._id);
+        }
+      }
+    });
+
+    return () => {
+      socket.off('new_task');
+      unsubscribe();
+    };
   }, []);
 
   return (
