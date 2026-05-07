@@ -218,4 +218,4 @@ const Landing = () => {
   );
 };
 
-export default Landin
+export default Landing;
