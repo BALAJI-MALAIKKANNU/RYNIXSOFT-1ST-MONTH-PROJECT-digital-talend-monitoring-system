@@ -12,10 +12,6 @@ exports.getProfile = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const adminUser = await User.findOne({ firebaseUid: req.user.uid });
-    if (!adminUser || adminUser.role !== 'admin') {
-      return res.status(403).json({ error: 'Only admins can fetch user lists' });
-    }
     const users = await User.find().select('-password');
     res.json(users);
   } catch (err) {
