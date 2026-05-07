@@ -146,93 +146,95 @@ const TeamManagement = () => {
         ))}
       </div>
 
-      <AnimatePresence>
-        {modalOpen && createPortal(
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }} 
-              animate={{ opacity: 1, scale: 1 }} 
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl w-full max-w-md shadow-xl border border-gray-100 overflow-hidden"
-            >
-              <div className="p-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-lg font-bold text-brand">Create New Team</h3>
-                <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">×</button>
-              </div>
-              <form onSubmit={handleCreateTeam} className="p-5 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Team Name</label>
-                  <input required type="text" value={newTeam.name} onChange={e => setNewTeam({...newTeam, name: e.target.value})} className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none" placeholder="e.g. Section A" />
+      {createPortal(
+        <AnimatePresence>
+          {modalOpen && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white rounded-2xl w-full max-w-md shadow-xl border border-gray-100 overflow-hidden"
+              >
+                <div className="p-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                  <h3 className="text-lg font-bold text-brand">Create New Team</h3>
+                  <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">×</button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                  <textarea value={newTeam.description} onChange={e => setNewTeam({...newTeam, description: e.target.value})} className="w-full p-3 rounded-lg border border-gray-200 focus:border-accent outline-none text-sm" placeholder="Optional details..." rows="3"></textarea>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Member Limit</label>
-                  <input type="number" min="1" value={newTeam.limit} onChange={e => setNewTeam({...newTeam, limit: parseInt(e.target.value)})} className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Add Members</label>
-                  <div className="relative">
-                    <input 
-                      type="text" 
-                      value={searchTerm} 
-                      onChange={e => setSearchTerm(e.target.value)} 
-                      className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none text-sm" 
-                      placeholder="Search users to add..." 
-                    />
-                    {searchTerm && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 shadow-xl rounded-lg max-h-48 overflow-y-auto z-50">
-                        {users.filter(u => u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) && !newTeam.members.includes(u._id)).length === 0 ? (
-                          <div className="p-3 text-sm text-gray-500 text-center">No users found</div>
-                        ) : (
-                          users.filter(u => u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) && !newTeam.members.includes(u._id)).map(u => (
-                            <div 
-                              key={u._id} 
-                              onClick={() => {
-                                setNewTeam({ ...newTeam, members: [...newTeam.members, u._id] });
-                                setSearchTerm('');
-                              }}
-                              className="p-3 hover:bg-gray-50 cursor-pointer text-sm text-brand border-b border-gray-50 last:border-0"
-                            >
-                              {u.fullName}
+                <form onSubmit={handleCreateTeam} className="p-5 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Team Name</label>
+                    <input required type="text" value={newTeam.name} onChange={e => setNewTeam({...newTeam, name: e.target.value})} className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none" placeholder="e.g. Section A" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea value={newTeam.description} onChange={e => setNewTeam({...newTeam, description: e.target.value})} className="w-full p-3 rounded-lg border border-gray-200 focus:border-accent outline-none text-sm" placeholder="Optional details..." rows="3"></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Member Limit</label>
+                    <input type="number" min="1" value={newTeam.limit} onChange={e => setNewTeam({...newTeam, limit: parseInt(e.target.value)})} className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Add Members</label>
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        value={searchTerm} 
+                        onChange={e => setSearchTerm(e.target.value)} 
+                        className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-accent outline-none text-sm" 
+                        placeholder="Search users to add..." 
+                      />
+                      {searchTerm && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 shadow-xl rounded-lg max-h-48 overflow-y-auto z-50">
+                          {users.filter(u => u?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) && !newTeam.members.includes(u._id)).length === 0 ? (
+                            <div className="p-3 text-sm text-gray-500 text-center">No users found</div>
+                          ) : (
+                            users.filter(u => u?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) && !newTeam.members.includes(u._id)).map(u => (
+                              <div 
+                                key={u._id} 
+                                onClick={() => {
+                                  setNewTeam({ ...newTeam, members: [...newTeam.members, u._id] });
+                                  setSearchTerm('');
+                                }}
+                                className="p-3 hover:bg-gray-50 cursor-pointer text-sm text-brand border-b border-gray-50 last:border-0"
+                              >
+                                {u.fullName}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {newTeam.members.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {newTeam.members.map(userId => {
+                          const user = users.find(u => u._id === userId);
+                          if (!user) return null;
+                          return (
+                            <div key={userId} className="flex items-center gap-1 bg-gray-100 px-3 py-1.5 rounded-full text-xs font-medium text-brand">
+                              <span>{user.fullName}</span>
+                              <button 
+                                type="button" 
+                                onClick={() => setNewTeam({ ...newTeam, members: newTeam.members.filter(id => id !== userId) })}
+                                className="text-gray-400 hover:text-danger ml-1"
+                              >
+                                ×
+                              </button>
                             </div>
-                          ))
-                        )}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
-                  {newTeam.members.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {newTeam.members.map(userId => {
-                        const user = users.find(u => u._id === userId);
-                        if (!user) return null;
-                        return (
-                          <div key={userId} className="flex items-center gap-1 bg-gray-100 px-3 py-1.5 rounded-full text-xs font-medium text-brand">
-                            <span>{user.fullName}</span>
-                            <button 
-                              type="button" 
-                              onClick={() => setNewTeam({ ...newTeam, members: newTeam.members.filter(id => id !== userId) })}
-                              className="text-gray-400 hover:text-danger ml-1"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-                <div className="flex justify-end gap-2 pt-2">
-                  <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">Cancel</button>
-                  <Button type="submit">Create</Button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        , document.body)}
-      </AnimatePresence>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                    <Button type="submit">Create</Button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      , document.body)}
     </motion.div>
   );
 };
