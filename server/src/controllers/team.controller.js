@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 exports.createTeam = async (req, res) => {
   try {
-    const { name, description, limit } = req.body;
+    const { name, description, limit, members } = req.body;
     
     const adminUser = await User.findOne({ firebaseUid: req.user.uid });
     if (!adminUser || adminUser.role !== 'admin') {
@@ -15,11 +15,16 @@ exports.createTeam = async (req, res) => {
       description,
       limit: limit || 50,
       createdBy: adminUser._id,
-      members: []
+      members: Array.isArray(members) ? members : []
     });
 
     await newTeam.save();
-    res.status(201).json(newTeam);
+    
+    const populatedTeam = await Team.findById(newTeam._id)
+      .populate('members', 'fullName email avatar')
+      .populate('createdBy', 'fullName');
+      
+    res.status(201).json(populatedTeam);
   } catch (err) {
     if (err.code === 11000) return res.status(400).json({ error: 'Team name already exists' });
     res.status(500).json({ error: err.message });
