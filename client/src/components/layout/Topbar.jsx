@@ -2,11 +2,11 @@ import React from 'react';
 import { Bell, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const Topbar = ({ user }) => {
+const Topbar = ({ user, onMenuClick }) => {
   return (
     <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-10 w-full">
       <div className="flex items-center gap-4">
-        <button className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+        <button onClick={onMenuClick} className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
           <Menu size={20} />
         </button>
         <h2 className="text-xl font-semibold text-brand md:block hidden">Dashboard</h2>

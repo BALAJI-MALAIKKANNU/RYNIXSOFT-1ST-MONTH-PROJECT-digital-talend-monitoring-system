@@ -9,6 +9,7 @@ import Topbar from '../layout/Topbar';
 export const ProtectedRoute = ({ children, requiredRole }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userRole = localStorage.getItem('role') || 'user';
 
   useEffect(() => {
@@ -32,10 +33,20 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
   }
 
   return (
-    <div className="flex h-screen bg-surface overflow-hidden">
-      <Sidebar role={userRole} />
+    <div className="flex h-screen bg-surface overflow-hidden relative">
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 md:hidden" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      <Sidebar role={userRole} isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar user={{ displayName: user.displayName || user.email?.split('@')[0], role: userRole, photoURL: user.photoURL }} />
+        <Topbar 
+          user={{ displayName: user.displayName || user.email?.split('@')[0], role: userRole, photoURL: user.photoURL }} 
+          onMenuClick={() => setIsMobileMenuOpen(true)}
+        />
         <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>
