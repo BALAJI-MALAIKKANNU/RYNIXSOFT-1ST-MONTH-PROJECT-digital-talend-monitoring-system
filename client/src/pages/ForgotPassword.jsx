@@ -19,7 +19,11 @@ const ForgotPassword = () => {
     
     setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email);
+      const actionCodeSettings = {
+        url: `${window.location.origin}/reset-password`,
+        handleCodeInApp: true,
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setEmailSent(true);
       toast.success('Reset link sent to your email!');
     } catch (err) {
