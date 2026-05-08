@@ -128,17 +128,17 @@ const Profile = () => {
       <h1 className="text-2xl font-bold text-brand">Profile Settings</h1>
       
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 text-center sm:text-left">
           {user?.avatar ? (
-            <img src={user.avatar} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" />
+            <img src={user.avatar} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md shrink-0" />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-accent/20 border-4 border-white shadow-md flex items-center justify-center text-3xl text-accent font-bold">
+            <div className="w-24 h-24 rounded-full bg-accent/20 border-4 border-white shadow-md flex items-center justify-center text-3xl text-accent font-bold shrink-0">
               {user?.fullName?.charAt(0) || 'U'}
             </div>
           )}
-          <div>
-            <h2 className="text-xl font-bold text-brand">{user?.fullName || 'Full Name'}</h2>
-            <p className="text-muted">{user?.email}</p>
+          <div className="overflow-hidden w-full">
+            <h2 className="text-xl font-bold text-brand truncate">{user?.fullName || 'Full Name'}</h2>
+            <p className="text-muted break-all">{user?.email}</p>
             <span className="inline-block mt-2 px-3 py-1 bg-gray-100 rounded-full text-xs font-semibold capitalize text-gray-600">
               Role: {user?.role}
             </span>
