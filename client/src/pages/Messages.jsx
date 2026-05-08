@@ -191,7 +191,7 @@ const Messages = () => {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="h-[calc(100vh-120px)] flex bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       
       {/* Sidebar */}
-      <div className="w-1/3 border-r border-gray-100 flex flex-col bg-gray-50/30">
+      <div className={`border-r border-gray-100 flex-col bg-gray-50/30 w-full md:w-80 shrink-0 ${activeContact ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-4 border-b border-gray-100">
           <h2 className="text-lg font-bold text-brand">Messages</h2>
           <p className="text-xs text-muted">Real-time communication</p>
@@ -228,15 +228,18 @@ const Messages = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="w-2/3 flex flex-col bg-[#F8FAFC]">
+      <div className={`flex-col bg-[#F8FAFC] flex-1 ${!activeContact ? 'hidden md:flex' : 'flex'}`}>
         {activeContact ? (
           <>
-            <div className="p-4 bg-white border-b border-gray-100 shadow-sm flex items-center gap-3 z-10">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold uppercase">
+            <div className="p-4 bg-white border-b border-gray-100 shadow-sm flex items-center gap-3 z-10 shrink-0">
+              <button onClick={() => setActiveContact(null)} className="md:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+              </button>
+              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold uppercase shrink-0">
                 {activeContact.fullName.charAt(0)}
               </div>
-              <div>
-                <h3 className="font-bold text-brand">{activeContact.fullName}</h3>
+              <div className="overflow-hidden">
+                <h3 className="font-bold text-brand truncate">{activeContact.fullName}</h3>
                 {isTyping ? (
                   <p className="text-xs text-indigo-500 font-medium italic animate-pulse">typing...</p>
                 ) : (
@@ -252,13 +255,13 @@ const Messages = () => {
                 const isMe = typeof msg.sender === 'object' ? msg.sender._id === currentUserMongoId : msg.sender === currentUserMongoId;
                 return (
                   <div key={msg._id || i} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} group`}>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 max-w-full">
                       {isMe && !msg.isDeleted && (
-                        <button onClick={() => deleteMessage(msg._id)} className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition-opacity rounded-full hover:bg-gray-100">
+                        <button onClick={() => deleteMessage(msg._id)} className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition-opacity rounded-full hover:bg-gray-100 shrink-0">
                           <Trash2 size={14} />
                         </button>
                       )}
-                      <div className={`max-w-[70%] p-3 rounded-2xl text-sm shadow-sm ${msg.isDeleted ? 'bg-gray-100 text-gray-400 italic' : isMe ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-sm'}`}>
+                      <div className={`max-w-[85%] md:max-w-[70%] p-3 rounded-2xl text-sm shadow-sm break-words ${msg.isDeleted ? 'bg-gray-100 text-gray-400 italic' : isMe ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-sm'}`}>
                         {msg.content}
                       </div>
                     </div>
